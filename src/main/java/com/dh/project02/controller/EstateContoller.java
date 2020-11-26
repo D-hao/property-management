@@ -3,14 +3,18 @@ package com.dh.project02.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dh.project02.bean.FcBuilding;
 import com.dh.project02.bean.FcEstate;
+import com.dh.project02.bean.FcUnit;
 import com.dh.project02.bean.TblCompany;
 import com.dh.project02.returnJson.ReturnObject;
 import com.dh.project02.service.EstateService;
+import com.dh.project02.vo.UnitMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,5 +71,15 @@ public class EstateContoller {
         } else {
             return JSONObject.toJSONString(new ReturnObject("更新楼宇失败"));
         }
+    }
+    @RequestMapping("/estate/selectUnit")
+    public  String selectUnit(@RequestBody UnitMessage[] unitMessages){
+        System.out.println("=====select unit =======");
+        List<FcUnit> allUnit=new ArrayList<>();
+        for(UnitMessage unitMessage:unitMessages){
+            allUnit.addAll(estateService.selectUnit((unitMessage)));
+        }
+        return JSONObject.toJSONString(new ReturnObject(allUnit));
+
     }
 }

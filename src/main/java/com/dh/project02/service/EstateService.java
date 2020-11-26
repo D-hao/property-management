@@ -3,10 +3,13 @@ package com.dh.project02.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dh.project02.bean.FcBuilding;
 import com.dh.project02.bean.FcEstate;
+import com.dh.project02.bean.FcUnit;
 import com.dh.project02.bean.TblCompany;
 import com.dh.project02.mapper.FcBuildingMapper;
 import com.dh.project02.mapper.FcEstateMapper;
+import com.dh.project02.mapper.FcUnitMapper;
 import com.dh.project02.mapper.TblCompanyMapper;
+import com.dh.project02.vo.UnitMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +29,8 @@ public class EstateService {
     private FcEstateMapper fcEstateMapper;
     @Autowired
     private FcBuildingMapper fcBuildingMapper;
-
+    @Autowired
+    private FcUnitMapper fcUnitMapper;
 
     public List<TblCompany> selectCompany() {
         List<TblCompany> companys = tblCompanyMapper.selectCompany();
@@ -81,7 +85,17 @@ public class EstateService {
         return i;
     }
 
-    public static void main(String[] args) {
-
+    public List<FcUnit> selectUnit(UnitMessage unitMessage) {
+        //定义返回值集合
+        List<FcUnit>  fcUnits=new ArrayList<>();
+        for(int i=0;i< unitMessage.getUnitCount();i++){
+            FcUnit fcUnit=new FcUnit();
+            fcUnit.setBuildingCode((unitMessage.getBuildingCode()));
+            fcUnit.setUnitCode("U"+(i+1));
+            fcUnit.setUnitName("第"+(i+1)+"单元");
+            fcUnitMapper.insert(fcUnit);
+            fcUnits.add(fcUnit);
+        }
+        return fcUnits;
     }
 }
