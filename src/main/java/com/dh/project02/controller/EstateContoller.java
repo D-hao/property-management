@@ -40,14 +40,15 @@ public class EstateContoller {
         System.out.println("insert estate");
         Integer result = estateService.insertEstate(fcEstate);
         if (result == 0) {
-            return JSONObject.toJSONString(new ReturnObject("0","房产编码已经存在"));
-        }else {
-            return JSONObject.toJSONString(new ReturnObject("1","插入房产成功"));
+            return JSONObject.toJSONString(new ReturnObject("0", "房产编码已经存在"));
+        } else {
+            return JSONObject.toJSONString(new ReturnObject("1", "插入房产成功"));
         }
     }
 
     /**
      * 此处完成的是楼宇插入的功能，但是，现在数据中没有楼宇信息，我们还需要返回插入的楼宇信息
+     *
      * @param buildingNumber
      * @param estateCode
      * @return
@@ -56,7 +57,7 @@ public class EstateContoller {
     public String selectBuilding(Integer buildingNumber, String estateCode) {
         System.out.println("select Building");
         List<FcBuilding> fcBuildings = estateService.selectBuiling(buildingNumber, estateCode);
-        System.out.println("======"+fcBuildings+"===========");
+        System.out.println("======" + fcBuildings + "===========");
         return JSONObject.toJSONString(new ReturnObject(fcBuildings));
     }
 
@@ -70,32 +71,66 @@ public class EstateContoller {
             return JSONObject.toJSONString(new ReturnObject("更新楼宇失败"));
         }
     }
+
     @RequestMapping("/estate/selectUnit")
-    public  String selectUnit(@RequestBody UnitMessage[] unitMessages){
+    public String selectUnit(@RequestBody UnitMessage[] unitMessages) {
         System.out.println("=====select unit =======");
-        List<FcUnit> allUnit=new ArrayList<>();
-        for(UnitMessage unitMessage:unitMessages){
+        List<FcUnit> allUnit = new ArrayList<>();
+        for (UnitMessage unitMessage : unitMessages) {
             allUnit.addAll(estateService.selectUnit((unitMessage)));
         }
         return JSONObject.toJSONString(new ReturnObject(allUnit));
 
     }
+
     @RequestMapping("/estate/updateUnit")
     public String updateUnit(FcUnit fcUnit) {
         Integer integer = estateService.updateUnit(fcUnit);
         if (integer == 0) {
             return JSONObject.toJSONString(new ReturnObject("更新单元失败"));
-        }else {
+        } else {
             return JSONObject.toJSONString(new ReturnObject("更新单元成功"));
         }
     }
+
     @RequestMapping("/estate/insertCell")
     public String insertCell(@RequestBody CellMessage[] cellMessages) {
         System.out.println("=====insert cell======");
         for (CellMessage cellMessage : cellMessages) {
-            System.out.println("======="+cellMessage);
+            System.out.println("=======" + cellMessage);
         }
         List<FcCell> list = estateService.insertCell(cellMessages);
         return JSONObject.toJSONString(new ReturnObject(list));
+    }
+
+    @RequestMapping("/estate/selectBuildingByEstate")
+    public String selectBuildingByEstate(String estateCode) {
+        System.out.println("estate" + estateCode);
+        List<FcBuilding> fcBuildings = estateService.selectBuildingByEstate(estateCode);
+        System.out.println("======");
+        System.out.println(fcBuildings);
+        return JSONObject.toJSONString(new ReturnObject(fcBuildings));
+    }
+
+    @RequestMapping("/estate/selectUnitByBuildingCode")
+    public String selectUnitByBuildingCode(String buildingCode) {
+        System.out.println("select unit");
+        List<FcUnit> fcUnits = estateService.selectUnitByBuildingCode(buildingCode);
+        return JSONObject.toJSONString(new ReturnObject(fcUnits));
+    }
+
+    @RequestMapping("/estate/selectCell")
+    public String selectCell(String unitCode) {
+        System.out.println("select cell");
+        List<FcCell> list = estateService.selectCell(unitCode);
+        return JSONObject.toJSONString(new ReturnObject(list));
+    }
+
+    @RequestMapping("/estate/selectEstate")
+    public String selectEstate(String company) {
+        System.out.println("estate company");
+        List<FcEstate> fcEstates = estateService.selectEstate(company);
+        return JSONObject.toJSONString(new ReturnObject(fcEstates));
+
     }
 }
