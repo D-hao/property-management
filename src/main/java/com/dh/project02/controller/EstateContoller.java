@@ -1,12 +1,10 @@
 package com.dh.project02.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dh.project02.bean.FcBuilding;
-import com.dh.project02.bean.FcEstate;
-import com.dh.project02.bean.FcUnit;
-import com.dh.project02.bean.TblCompany;
+import com.dh.project02.bean.*;
 import com.dh.project02.returnJson.ReturnObject;
 import com.dh.project02.service.EstateService;
+import com.dh.project02.vo.CellMessage;
 import com.dh.project02.vo.UnitMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -81,5 +79,23 @@ public class EstateContoller {
         }
         return JSONObject.toJSONString(new ReturnObject(allUnit));
 
+    }
+    @RequestMapping("/estate/updateUnit")
+    public String updateUnit(FcUnit fcUnit) {
+        Integer integer = estateService.updateUnit(fcUnit);
+        if (integer == 0) {
+            return JSONObject.toJSONString(new ReturnObject("更新单元失败"));
+        }else {
+            return JSONObject.toJSONString(new ReturnObject("更新单元成功"));
+        }
+    }
+    @RequestMapping("/estate/insertCell")
+    public String insertCell(@RequestBody CellMessage[] cellMessages) {
+        System.out.println("=====insert cell======");
+        for (CellMessage cellMessage : cellMessages) {
+            System.out.println("======="+cellMessage);
+        }
+        List<FcCell> list = estateService.insertCell(cellMessages);
+        return JSONObject.toJSONString(new ReturnObject(list));
     }
 }

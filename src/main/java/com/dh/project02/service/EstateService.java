@@ -1,14 +1,9 @@
 package com.dh.project02.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dh.project02.bean.FcBuilding;
-import com.dh.project02.bean.FcEstate;
-import com.dh.project02.bean.FcUnit;
-import com.dh.project02.bean.TblCompany;
-import com.dh.project02.mapper.FcBuildingMapper;
-import com.dh.project02.mapper.FcEstateMapper;
-import com.dh.project02.mapper.FcUnitMapper;
-import com.dh.project02.mapper.TblCompanyMapper;
+import com.dh.project02.bean.*;
+import com.dh.project02.mapper.*;
+import com.dh.project02.vo.CellMessage;
 import com.dh.project02.vo.UnitMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +26,8 @@ public class EstateService {
     private FcBuildingMapper fcBuildingMapper;
     @Autowired
     private FcUnitMapper fcUnitMapper;
+    @Autowired
+    private FcCellMapper fcCellMapper;
 
     public List<TblCompany> selectCompany() {
         List<TblCompany> companys = tblCompanyMapper.selectCompany();
@@ -97,5 +94,31 @@ public class EstateService {
             fcUnits.add(fcUnit);
         }
         return fcUnits;
+    }
+
+    public Integer updateUnit(FcUnit fcUnit) {
+        int i = fcUnitMapper.updateById(fcUnit);
+        return i;
+    }
+
+    public List<FcCell> insertCell(CellMessage[] cellMessages) {
+        List<FcCell> list = new ArrayList<>();
+        //楼层
+        for (CellMessage cellMessage : cellMessages) {
+            //房价
+            for(int i=1;i<=cellMessage.getStopFloor();i++){
+                for(int j=cellMessage.getStartCellId();j<=cellMessage.getStopCellId();j++){
+                    FcCell fcCell=new FcCell();
+                    fcCell.setUnitCode(cellMessage.getUnitCode());
+                    fcCell.setCellName(i+"0"+j);
+                    fcCell.setCellCode("C" + i + "0" + j);
+                    fcCell.setFloorNumber(i);
+                    fcCellMapper.insert(fcCell);
+                    list.add(fcCell);
+                }
+            }
+        }
+
+        return  list;
     }
 }
